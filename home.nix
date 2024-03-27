@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs,  ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -34,6 +34,9 @@
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
+    pkgs.fd
+    pkgs.nil
+    pkgs.wev
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -49,6 +52,8 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+    # ".config/helix/config.toml".source = helix/config.toml;
+    # ".config/helix/languages.toml".source = helix/languages.toml;
   };
 
   # Home Manager can also manage your environment variables through
@@ -68,8 +73,11 @@
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+    EDITOR = "hx"; # Helix
   };
 
   # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
+   programs = import ./programs.nix {pkgs=pkgs;};
+   stylix = import ./stylix.nix {pkgs=pkgs;};
+
 }

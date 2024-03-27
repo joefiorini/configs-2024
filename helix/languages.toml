@@ -1,0 +1,87 @@
+
+[[language]]
+name = "html"
+formatter = { command = 'prettier', args = ["--parser", "html"] }
+
+[[language]]
+name = "json"
+language-servers = [ "vscode-json-language-server" ]
+formatter = { command = 'npx', args = ["prettier", "--parser", "json"] }
+indent = { tab-width = 4, unit = "\t" }
+auto-format = true
+
+[language-server.vscode-json-language-server.config]
+json = { validate = { enable = true }, format = { enable = true } }
+provideFormatter = true
+
+[language-server.vscode-css-language-server.config]
+css = { validate = { enable = true } }
+scss = { validate = { enable = true } }
+less = { validate = { enable = true } }
+provideFormatter = true
+
+[language-server.eslint]
+args = ["--stdio"]
+command = "vscode-eslint-language-server"
+
+[language-server.eslint.config]
+ format = true
+ nodePath = ""
+ onIgnoredFiles = "off"
+ packageManager = "yarn"
+ quiet = false
+ rulesCustomizations = []
+ run = "onType"
+ useESLintClass = false
+ validate = "on"
+ codeAction = { disableRuleComment = { enable = true, location = "separateLine" }, showDocumentation = { enable = true } }
+ codeActionOnSave = { mode = "all" }
+ experimental = { }
+ problems = { shortenToSingleLine = false }
+ workingDirectory = { mode = "auto" }
+ 
+[[language]]
+name = "css"
+formatter = { command = 'prettier', args = ["--parser", "css"] }
+
+[[language]]
+name = "javascript"
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "typescript"
+auto-format = true
+language-servers = [ "typescript-language-server", "eslint", "snippets-ls"]
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+
+[language-server.typescript-language-server.config]
+documentFormatting = false
+tsserver = { path = "node_modules/typescript/lib/tsserver.js" }
+hostInfo = "helix"
+
+[language-server.typescript-language-server.config.typescript.inlayHints]
+includeInlayEnumMemberValueHints = true
+includeInlayFunctionLikeReturnTypeHints = true
+includeInlayFunctionParameterTypeHints = true
+includeInlayParameterNameHints = "all"
+includeInlayParameterNameHintsWhenArgumentMatchesName = true
+includeInlayPropertyDeclarationTypeHints = true
+includeInlayVariableTypeHints = true
+
+[language-server.typescript-language-server.config.completions]
+completeFunctionCalls = true
+
+[language-server.typescript-language-server.config.javascript.inlayHints]
+includeInlayEnumMemberValueHints = true
+includeInlayFunctionLikeReturnTypeHints = true
+includeInlayFunctionParameterTypeHints = true
+includeInlayParameterNameHints = "all"
+includeInlayParameterNameHintsWhenArgumentMatchesName = true
+includeInlayPropertyDeclarationTypeHints = true
+includeInlayVariableTypeHints = true
+
+[language-server.snippets-ls]
+language-id = "typescriptreact"
+command = "snippets-ls"
+args = ["-config", ".helix/snippets.json"]
