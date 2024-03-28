@@ -1,4 +1,4 @@
-{ pkgs,  ... }:
+{ pkgs, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -46,7 +46,7 @@
     rustdesk
     rustdesk-server
     hyprland-autoname-workspaces
- ];
+  ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -86,13 +86,14 @@
   };
 
   # Let Home Manager install and manage itself.
-   programs = import ./programs.nix {pkgs=pkgs;};
-   stylix = import ./stylix.nix {pkgs=pkgs;};
-  wayland.windowManager.hyprland = import ./programs/hyprland.nix {pkgs = pkgs;};
- nixpkgs.config.allowUnfreePredicate = _: true;
+  programs = import ./programs.nix { pkgs = pkgs; };
+  stylix = import ./stylix.nix { pkgs = pkgs; };
+  wayland.windowManager.hyprland =
+    import ./programs/hyprland.nix { pkgs = pkgs; };
+  nixpkgs.config.allowUnfreePredicate = _: true;
 
- # nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
- #             "libsciter-4.4.8.23-bis"
- #           ];
+  # nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+  #             "libsciter-4.4.8.23-bis"
+  #           ];
 
 }

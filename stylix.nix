@@ -1,9 +1,7 @@
 _: {
   polarity = "dark";
   image = ./wall0.png;
-  opacity = {
-    terminal = 0.85;
-  };
+  opacity = { terminal = 0.85; };
   targets = {
     kde.enable = false;
     gnome.enable = false;
@@ -17,8 +15,6 @@ _: {
       enableCenterBackColors = true;
 
     };
-    helix = {
-      enable = true;
-    };
+    helix = { enable = true; };
   };
 }

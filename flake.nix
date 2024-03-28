@@ -16,15 +16,13 @@
   outputs = { nixpkgs, home-manager, nil, stylix, ... }:
     let
       system = "x86_64-linux";
-      extras = {
-        nil = nil;
-      };
+      extras = { nil = nil; };
 
       pkgs = nixpkgs.legacyPackages.${system} // extras;
     in {
-    home-manager.users.joe.nixpkgs.config.allowUnfree =true;
-    nixpkgs.config.allowUnfree = true;
-               homeConfigurations."joe" = home-manager.lib.homeManagerConfiguration {
+      home-manager.users.joe.nixpkgs.config.allowUnfree = true;
+      nixpkgs.config.allowUnfree = true;
+      homeConfigurations."joe" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,

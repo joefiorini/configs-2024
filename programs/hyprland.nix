@@ -1,6 +1,5 @@
 _: {
   enable = true;
-  settings = {
-  };
+  settings = { };
   extraConfig = builtins.readFile ./hyprland.conf;
 }
