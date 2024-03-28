@@ -10,6 +10,7 @@
     };
     stylix.url = "github:danth/stylix";
     nil.url = "github:oxalica/nil";
+    hyprland.url = "github:hyprwm/Hyprland";
   };
 
   outputs = { nixpkgs, home-manager, nil, stylix, ... }:
@@ -18,9 +19,12 @@
       extras = {
         nil = nil;
       };
+
       pkgs = nixpkgs.legacyPackages.${system} // extras;
     in {
-      homeConfigurations."joe" = home-manager.lib.homeManagerConfiguration {
+    home-manager.users.joe.nixpkgs.config.allowUnfree =true;
+    nixpkgs.config.allowUnfree = true;
+               homeConfigurations."joe" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,
