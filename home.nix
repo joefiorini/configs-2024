@@ -34,18 +34,23 @@
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
+    btrfs-assistant
+    btrfs-heatmap
+    btrfs-progs
+    btrfs-snap
+    cliphist
     fd
-    nixfmt
-    ripgrep-all
-    nil
-    wev
-    oculante
+    gamescope
+    hyprland-autoname-workspaces
     kdePackages.koko
     kooha
-    cliphist
+    nil
+    nixfmt
+    oculante
+    ripgrep-all
     rustdesk
     rustdesk-server
-    hyprland-autoname-workspaces
+    wev
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -85,8 +90,8 @@
     EDITOR = "hx"; # Helix
   };
 
-  # Let Home Manager install and manage itself.
-  programs = import ./programs.nix { pkgs = pkgs; };
+  imports = [ ./programs.nix ];
+
   stylix = import ./stylix.nix { pkgs = pkgs; };
   wayland.windowManager.hyprland =
     import ./programs/hyprland.nix { pkgs = pkgs; };
