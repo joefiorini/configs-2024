@@ -1,5 +1,8 @@
-App.config({
-    windows: [
-        // this is where window definitions will go
-    ]
-})
+const main = '/tmp/ags/main.js';
+
+try {
+    await import(`file://${main}`);
+} catch (error) {
+    console.error(error);
+    App.quit();
+}
