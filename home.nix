@@ -50,6 +50,9 @@
     ripgrep-all
     rustdesk
     rustdesk-server
+    nodePackages.typescript
+    nodePackages.typescript-language-server
+    wayvnc
     wev
   ];
 

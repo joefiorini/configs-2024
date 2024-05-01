@@ -74,6 +74,7 @@ _: {
         A-b = "move_prev_word_start";
         C-n = "move_visual_line_down";
         C-p = "move_visual_line_up";
+        "C-[" = "normal_mode";
       };
 
       keys.normal.space = {

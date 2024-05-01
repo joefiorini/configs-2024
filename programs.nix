@@ -1,5 +1,10 @@
 _: {
-  imports = [ ./programs/fish.nix ./programs/helix.nix ./programs/ags.nix ];
+  imports = [
+    ./programs/fish.nix
+    ./programs/helix.nix
+    ./programs/ags.nix
+    ./programs/direnv.nix
+  ];
   programs = {
     kitty.enable = true;
     bat.enable = true;
