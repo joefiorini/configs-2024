@@ -4,6 +4,10 @@ _: {
     ./programs/helix.nix
     ./programs/ags.nix
     ./programs/direnv.nix
+    ./programs/kitty.nix
+    ./programs/git.nix
+    ./programs/aerospace.nix
+    ./programs/jj.nix
   ];
   programs = {
     kitty.enable = true;

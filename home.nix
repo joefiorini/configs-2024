@@ -40,13 +40,18 @@
     btrfs-snap
     cliphist
     fd
-    gamescope
-    hyprland-autoname-workspaces
-    kdePackages.koko
-    kooha
-    nil
-    nixfmt
-    oculante
+    fzf
+    # gamescope
+    fastfetch
+    obsidian
+    spotify
+    # hyprland-autoname-workspaces
+    # kdePackages.koko
+    # kooha
+    inputs.jj.packages.${pkgs.system}.default
+    just
+    # oculante
+    revup
     ripgrep-all
     rustdesk
     rustdesk-server
