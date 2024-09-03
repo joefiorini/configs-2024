@@ -1,6 +1,19 @@
 { pkgs, ... }: {
   programs.fish = {
     enable = true;
+    shellInit = ''
+      fish_add_path --prepend /opt/homebrew/bin
+
+      if test -d (brew --prefix)"/share/fish/completions"
+        set -p fish_complete_path (brew --prefix)/share/fish/completions
+      end
+
+      if test -d (brew --prefix)"/share/fish/vendor_completions.d"
+          set -p fish_complete_path (brew --prefix)/share/fish/vendor_completions.d
+      end
+
+      set -x DEVBOX_COREPACK_ENABLED 1
+    '';
     plugins = with pkgs.fishPlugins; [
       {
         name = "nix-env.fish";
@@ -18,7 +31,7 @@
       }
       {
         name = "fzf";
-        src = fzf.src;
+        src = fzf-fish.src;
       }
       {
         name = "colored-man-pages";

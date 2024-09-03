@@ -1,9 +1,31 @@
-_: {
+{ inputs, pkgs, ... }: {
+  home.packages = with pkgs; [
+    nodePackages.typescript
+    nodePackages.typescript-language-server
+    nodePackages.bash-language-server # Bash
+    nodePackages.dockerfile-language-server-nodejs
+    nodePackages.vscode-langservers-extracted
+emmet-language-server
+    nil
+    nodePackages.pyright # Python
+    nodePackages.stylelint
+    nodePackages.pyright # Python
+    nodePackages.stylelint
+    pkgs.dotnet-sdk
+    pkgs.omnisharp-roslyn # .NET
+    pkgs.msbuild
+    marksman # Markdown
+    nixfmt
+    ltex-ls
+    jsonnet-language-server
+  ];
   programs.helix = {
     enable = true;
+    package = inputs.helix.packages.${pkgs.system}.default;
     settings = {
       editor = {
         auto-save = true;
+        auto-format = true;
         bufferline = "multiple";
 
         cursor-shape = {
@@ -16,7 +38,6 @@ _: {
         lsp = {
           display-messages = true;
           display-inlay-hints = true;
-
         };
 
         statusline = {
@@ -89,19 +110,173 @@ _: {
         };
       };
     };
-    languages = {
-      language = [{
-        name = "nix";
-        auto-format = true;
-      }];
-      language-server.nil = {
-        config = {
-          formatting = { command = [ "nixfmt" ]; };
-          flake = {
-            autoEvalInputs = true;
-            nixpkgsInputName = "pkgs";
+    languages = with pkgs; {
+      language = let
+        jsTsWebLanguageServers = [
+          {
+            name = "typescript-language-server";
+            except-features = [ "format" ];
+          }
+          "eslint"
+          {
+            name = "efm-lsp-prettier";
+            only-features = [ "format" ];
+          }
+        ];
+      in [
+        {
+          name = "bash";
+          auto-format = true;
+          file-types = [ "sh" "bash" ];
+          formatter = {
+            command = "${pkgs.shfmt}/bin/shfmt";
+            # Indent with 2 spaces, simplify the code, indent switch cases, add space after redirection
+            args = [ "-i" "4" "-s" "-ci" "-sr" ];
+          };
+        }
+        {
+          name = "nix";
+          auto-format = true;
+          language-servers = [ "nil" ];
+        }
+        {
+          name = "c-sharp";
+          language-servers = [ "omnisharp" ];
+        }
+        {
+          name = "typescript";
+          auto-format = true;
+          language-servers = jsTsWebLanguageServers;
+        }
+        {
+          name = "javascript";
+          auto-format = true;
+          language-servers = jsTsWebLanguageServers;
+        }
+        {
+          name = "jsx";
+          auto-format = true;
+          language-servers = jsTsWebLanguageServers;
+        }
+        {
+          name = "tsx";
+          auto-format = true;
+          language-servers = jsTsWebLanguageServers;
+        }
+        {
+          name = "json";
+          auto-format = true;
+          language-servers = [
+            {
+              name = "vscode-json-language-server";
+              except-features = [ "format" ];
+            }
+            "efm-lsp-prettier"
+          ];
+        }
+        {
+          name = "markdown";
+          auto-format = true;
+          language-servers = [
+            {
+              name = "marksman";
+              except-features = [ "format" ];
+            }
+            "ltex-ls"
+            "efm-lsp-prettier"
+          ];
+        }
+
+        {
+          name = "xml";
+          auto-format = true;
+          file-types = [ "xml" ];
+          formatter = {
+            command = "${pkgs.yq-go}/bin/yq";
+            args =
+              [ "--input-format" "xml" "--output-format" "xml" "--indent" "2" ];
+          };
+        }
+      ];
+      language-server = {
+        omnisharp = {
+          command = "OmniSharp";
+          args = [ "-l" "Error" "--languageserver" "-z" ];
+          timeout = 60;
+        };
+        nil = {
+          config = {
+            formatting = { command = [ "nixfmt" ]; };
+            flake = {
+              autoEvalInputs = true;
+              nixpkgsInputName = "pkgs";
+            };
           };
         };
+        efm-lsp-prettier = {
+          command = "${efm-langserver}/bin/efm-langserver";
+          config = {
+            documentFormatting = true;
+            languages = lib.genAttrs [
+              "typescript"
+              "javascript"
+              "typescriptreact"
+              "javascriptreact"
+              "vue"
+              "json"
+              "markdown"
+              "css"
+              "less"
+              "sass"
+              "scss"
+            ] (_: [{
+              formatCommand =
+                "${nodePackages.prettier}/bin/prettier --stdin-filepath \${INPUT}";
+              formatStdin = true;
+            }]);
+          };
+        };
+        eslint = {
+          command = "vscode-eslint-language-server";
+          args = [ "--stdio" ];
+          config = {
+            validate = "on";
+            packageManager = "npm";
+            useESLintClass = false;
+            # codeActionOnSave.mode = "all";
+            codeActionsOnSave = { mode = "all"; "source.fixAll.eslint" = true; };
+            format = true;
+            quiet = false;
+            onIgnoredFiles = "off";
+            rulesCustomizations = [ ];
+            run = "onType";
+            # nodePath configures the directory in which the eslint server should start its node_modules resolution.
+            # This path is relative to the workspace folder (root dir) of the server instance.
+            nodePath = "";
+            # use the workspace folder location or the file location (if no workspace folder is open) as the working directory
+
+            workingDirectory.mode = "auto";
+            experimental = { };
+            problems.shortenToSingleLine = false;
+            codeAction = {
+              disableRuleComment = {
+                enable = true;
+                location = "separateLine";
+              };
+              showDocumentation.enable = true;
+            };
+          };
+        };
+        typescript-language-server = {
+          command =
+            "${nodePackages.typescript-language-server}/bin/typescript-language-server";
+          args = [
+            "--stdio"
+          ];
+          config.documentFormatting = false;
+        };
+        ltex-ls.command = "ltex-ls";
+
       };
     };
   };

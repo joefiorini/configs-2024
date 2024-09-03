@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = "joe";
-  home.homeDirectory = "/var/home/joe";
+  home.username = "joefiorini";
+  home.homeDirectory = "/Users/joefiorini";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -34,11 +34,13 @@
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
-    btrfs-assistant
-    btrfs-heatmap
-    btrfs-progs
-    btrfs-snap
-    cliphist
+    # btrfs-assistant
+    # btrfs-heatmap
+    # btrfs-progs
+    # btrfs-snap
+    # cliphist
+    # devbox
+    cachix
     fd
     fzf
     # gamescope
@@ -51,14 +53,9 @@
     inputs.jj.packages.${pkgs.system}.default
     just
     # oculante
-    revup
     ripgrep-all
-    rustdesk
-    rustdesk-server
-    nodePackages.typescript
-    nodePackages.typescript-language-server
-    wayvnc
-    wev
+    # rustdesk
+    # rustdesk-server
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -98,15 +95,18 @@
     EDITOR = "hx"; # Helix
   };
 
-  imports = [ ./programs.nix ];
+  home.sessionPath = [ "/opt/homebrew/bin" ];
 
-  stylix = import ./stylix.nix { pkgs = pkgs; };
-  wayland.windowManager.hyprland =
-    import ./programs/hyprland.nix { pkgs = pkgs; };
+  home.shellAliases = { ssh = "kitten ssh"; };
+  imports = [ ./stylix.nix ./programs.nix ];
+
+  # stylix = import ./stylix.nix { pkgs = pkgs; };
+  #  wayland.windowManager.hyprland =
+  #    import ./programs/hyprland.nix { pkgs = pkgs; };
+
   nixpkgs.config.allowUnfreePredicate = _: true;
 
   # nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
   #             "libsciter-4.4.8.23-bis"
   #           ];
-
 }
