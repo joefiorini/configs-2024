@@ -3,6 +3,11 @@
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
+    resources = {
+      url = "git+ssh://git@github.com/joefiorini/configs-private";
+      flake = false;
+    };
+    nix.url = "https://flakehub.com/f/DeterminateSystems/nix/2.0";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
     nix-darwin = {
@@ -23,7 +28,7 @@
     };
     nil.url = "github:oxalica/nil";
     # hyprland.url = "github:hyprwm/Hyprland";
-    ags.url = "github:Aylur/ags";
+    # ags.url = "github:Aylur/ags";
     #  launch Nix-installed apps using only your keyboard, using ⌘ space
     mac-app-util.url = "github:hraban/mac-app-util";
     base16-helix = {
@@ -35,8 +40,8 @@
     jj.url = "github:bnjmnt4n/jj/ssh-openssh";
   };
 
-  outputs = { self, nix-darwin, home-manager, stylix, mac-app-util, helix, jj
-    , ... }@inputs:
+  outputs = { self, resources, nix, nix-darwin, home-manager, stylix
+    , mac-app-util, helix, jj, ... }@inputs:
     let
       configuration = { pkgs, ... }:
         let homeDir = "/Users/joefiorini";
@@ -54,7 +59,7 @@
           # nix.package = pkgs.nix;
 
           # Necessary for using flakes on this system.
-          nix.settings.experimental-features = "nix-command flakes";
+          # nix.settings.experimental-features = "nix-command flakes";
 
           # Create /etc/zshrc that loads the nix-darwin environment.
           # programs.zsh.enable = true; # default shell on catalina
@@ -65,50 +70,31 @@
 
           homebrew = {
             enable = true;
-            taps = [{
-              name = "microsoft/mssql-release";
-              clone_target =
-                "https://github.com/Microsoft/homebrew-mssql-release";
-            }];
 
-            casks = [
-              "maccy"
-              "nikitabobko/tap/aerospace"
-              "notion-enhanced"
-              "notion-calendar"
-              "notion"
-            ];
+            casks = [ "notion-enhanced" "notion-calendar" "notion" ];
 
-            brews = [
-              "curl"
-              "mssql-tools"
-              "msodbcsql17"
-              "mono-libgdiplus"
-              "p7zip"
-              "podman"
-              "podman-compose"
-            ];
           };
 
-          # stylix.enable = true;
-
-          imports = [ (builtins.toPath "${stylix}/stylix/opacity.nix") ];
+          imports = [
+            (builtins.toPath "${stylix}/stylix/opacity.nix")
+            ./modules/titan.nix
+          ];
           fonts = {
             packages = with pkgs; [
               material-design-icons
               font-awesome
               source-sans
               source-serif
-              larabiefont
-              cartograph-cf
-              manifold-cf
+              # larabiefont
+              # cartograph-cf
+              # manifold-cf
               recursive-sans
             ];
           };
 
           stylix = {
             enable = true;
-            image = ./resources/8959459.jpg;
+            image = "${resources}/8959459.jpg";
           };
           services = {
             yabai = {
@@ -241,9 +227,9 @@
       # $ darwin-rebuild build --flake .#simple
       darwinConfigurations.m3max-work = nix-darwin.lib.darwinSystem {
         modules = [
+          (_: { imports = [ nix.darwinModules.default ]; })
           configuration
-          ./modules/services
-          (import ./packages)
+          (_: { imports = [ ./packages ]; })
           home-manager.darwinModules.home-manager
           stylix.darwinModules.stylix
           {

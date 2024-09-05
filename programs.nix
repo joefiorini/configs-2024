@@ -1,8 +1,7 @@
-_: {
+{ lib, pkgs, ... }: {
   imports = [
     ./programs/fish.nix
     ./programs/helix.nix
-    ./programs/ags.nix
     ./programs/direnv.nix
     ./programs/kitty.nix
     ./programs/git.nix
@@ -10,12 +9,19 @@ _: {
     ./programs/jj.nix
   ];
   programs = {
-    kitty.enable = true;
     bat.enable = true;
-    eza.enable = true;
+    # eza.enable = true;
     thefuck.enable = true;
     git.enable = true;
+    dircolors.enable = true;
+    dircolors.extraConfig = lib.readFile ./dracula.dircolors;
+    gh.enable = true;
+    gh.extensions = with pkgs; [ gh-copilot gh-poi ];
+    lsd.enable = true;
+    lsd.enableAliases = true;
     zoxide.enable = true;
-    waybar.enable = true;
+    jq.enable = true;
+    ripgrep.enable = true;
+    # waybar.enable = true;
   };
 }

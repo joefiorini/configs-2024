@@ -1,11 +1,11 @@
-{ config, ... }:
+{ config, lib, ... }:
 let cfg = config.roles.titan;
 in {
   options.roles.titan = {
-    enable = mkEnableOption "important dependencies for titan development";
+    enable = lib.mkEnableOption "important dependencies for titan development";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     homebrew = {
       enable = true;
       taps = [{

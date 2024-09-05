@@ -1,8 +1,8 @@
-{ stdenv, ... }:
-stdenv.mkDerivation rec {
+{ stdenv, inputs, ... }:
+stdenv.mkDerivation {
   pname = "Manifold CF";
   version = "4.3";
-  src = ../../. + builtins.toPath "/resources/fonts/manifold-cf";
+  src = "${inputs.resources}/fonts/manifold-cf";
 
   installPhase = ''
     mkdir -p $out

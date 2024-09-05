@@ -53,7 +53,9 @@
     inputs.jj.packages.${pkgs.system}.default
     just
     # oculante
+    revup
     ripgrep-all
+    yazi
     # rustdesk
     # rustdesk-server
   ];
